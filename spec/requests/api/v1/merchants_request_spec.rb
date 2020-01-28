@@ -23,9 +23,11 @@ describe "Merchants API" do
 
   it "can get a merchant's items" do
     db_merchant = create(:merchant)
+    db_merchant_2 = create(:merchant)
     item_1 = create(:item, merchant: db_merchant)
     item_2 = create(:item, merchant: db_merchant)
     item_3 = create(:item, merchant: db_merchant)
+    item_4 = create(:item, merchant: db_merchant_2)
 
     get "/api/v1/merchants/#{db_merchant.id}/items"
     expect(response).to be_successful
