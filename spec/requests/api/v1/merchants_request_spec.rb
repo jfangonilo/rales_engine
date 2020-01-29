@@ -35,7 +35,26 @@ describe "Merchants API" do
 
     expect(items["data"].count).to eq 3
     items["data"].each do |item|
-      expect(db_merchant.id).to eq item["attributes"]["merchant_id"]
+      expect(item["attributes"]["merchant_id"]).to eq db_merchant.id
+    end
+  end
+
+  it "can get a merchant's invoices" do
+    merchant = create(:merchant)
+    merchant_2 = create(:merchant)
+    customer = create(:customer)
+    invoice_1 = create(:invoice, merchant: merchant, customer: customer)
+    invoice_2 = create(:invoice, merchant: merchant, customer: customer)
+    invoice_3 = create(:invoice, merchant: merchant, customer: customer)
+    invoice_4 = create(:invoice, merchant: merchant_2, customer: customer)
+
+    get "/api/v1/merchants/#{merchant.id}/invoices"
+    expect(response).to be_successful
+    invoices = JSON.parse(response.body)
+
+    expect(invoices["data"].count).to eq 3
+    invoices["data"].each do |invoice|
+      expect(invoice["attributes"]["merchant_id"]).to eq merchant.id
     end
   end
 end
