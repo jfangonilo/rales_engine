@@ -19,13 +19,14 @@ RSpec.describe Merchant, type: :model do
       @item_5 = create(:item, merchant: @merchants[5], unit_price: 100000)
       @item_6 = create(:item, merchant: @merchants[6], unit_price: 1000000)
 
-      @invoice_0 = create(:invoice, customer: @customer, merchant: @merchants[0])
-      @invoice_1 = create(:invoice, customer: @customer, merchant: @merchants[1])
-      @invoice_2 = create(:invoice, customer: @customer, merchant: @merchants[2])
-      @invoice_3 = create(:invoice, customer: @customer, merchant: @merchants[3])
+      @date = "2020-01-01"
+      @invoice_0 = create(:invoice, customer: @customer, merchant: @merchants[0], created_at: @date)
+      @invoice_1 = create(:invoice, customer: @customer, merchant: @merchants[1], created_at: @date)
+      @invoice_2 = create(:invoice, customer: @customer, merchant: @merchants[2], created_at: @date)
+      @invoice_3 = create(:invoice, customer: @customer, merchant: @merchants[3], created_at: @date)
       @invoice_4 = create(:invoice, customer: @customer, merchant: @merchants[4])
-      @invoice_5 = create(:invoice, customer: @customer, merchant: @merchants[5])
-      @invoice_6 = create(:invoice, customer: @customer, merchant: @merchants[6])
+      @invoice_5 = create(:invoice, customer: @customer, merchant: @merchants[5], created_at: @date)
+      @invoice_6 = create(:invoice, customer: @customer, merchant: @merchants[6], created_at: @date)
 
       @invoice_item_0 = create(:invoice_item, item: @item_0, unit_price: @item_0.unit_price, invoice: @invoice_0)
       @invoice_item_1 = create(:invoice_item, item: @item_1, unit_price: @item_1.unit_price, invoice: @invoice_1)
@@ -47,6 +48,12 @@ RSpec.describe Merchant, type: :model do
     it 'most_revenue' do
       expected = [@merchants[4], @merchants[3], @merchants[2]]
       expect(Merchant.most_revenue(3)).to eq expected
+    end
+
+    it 'total_revenue_by_date' do
+      result = Merchant.total_revenue(@date)
+      expected = 1111
+      expect(result.total_revenue).to eq expected
     end
   end
 end

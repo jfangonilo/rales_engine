@@ -33,6 +33,7 @@ group :development, :test do
   gem 'factory_bot_rails'
   gem 'nyan-cat-formatter'
   gem 'shoulda-matchers'
+  gem 'simplecov'
 end
 
 group :development do
