@@ -10,53 +10,93 @@ require './app/models/transaction.rb'
 namespace :import do
   desc "import data from CSV"
 
-  task customer_csv: :environment do
+  task customers: :environment do
     Customer.destroy_all
     customers = CSV.foreach("./data/customers.csv", headers: true, header_converters: :symbol)
-    customers.each do |row_data|
-      Customer.create(row_data.to_hash)
+    customers.each do |row|
+      Customer.create!({
+        id: row[:id],
+        first_name: row[:first_name],
+        last_name: row[:last_name],
+        created_at: row[:created_at],
+        updated_at: row[:updated_at]
+      })
     end
   end
 
-  task merchant_csv: :environment do
+  task merchants: :environment do
     Merchant.destroy_all
     merchants = CSV.foreach("./data/merchants.csv", headers: true, header_converters: :symbol)
-    merchants.each do |row_data|
-      Merchant.create(row_data.to_hash)
+    merchants.each do |row|
+      Merchant.create!({
+        id: row[:id],
+        name: row[:name],
+        created_at: row[:created_at],
+        updated_at: row[:updated_at]
+      })
     end
   end
 
-  task item_csv: :environment do
+  task items: :environment do
     Item.destroy_all
     items = CSV.foreach("./data/items.csv", headers: true, header_converters: :symbol)
-    items.each do |row_data|
-      x = Item.create(row_data.to_hash)
-      x.update(unit_price: x.unit_price.to_f/100)
+    items.each do |row|
+      x = Item.create!({
+        id: row[:id],
+        name: row[:name],
+        description: row[:description],
+        unit_price: row[:unit_price].to_f/100,
+        merchant_id: row[:merchant_id],
+        created_at: row[:created_at],
+        updated_at: row[:updated_at]
+      })
     end
   end
 
-  task invoice_csv: :environment do
+  task invoices: :environment do
     Invoice.destroy_all
     invoices = CSV.foreach("./data/invoices.csv", headers: true, header_converters: :symbol)
-    invoices.each do |row_data|
-      Invoice.create(row_data.to_hash)
+    invoices.each do |row|
+      Invoice.create!({
+        id: row[:id],
+        customer_id: row[:customer_id],
+        merchant_id: row[:merchant_id],
+        status: row[:status],
+        created_at: row[:created_at],
+        updated_at: row[:updated_at]
+      })
     end
   end
 
-  task invoice_item_csv: :environment do
+  task invoice_items: :environment do
     InvoiceItem.destroy_all
     invoice_items = CSV.foreach("./data/invoice_items.csv", headers: true, header_converters: :symbol)
-    invoice_items.each do |row_data|
-      x = InvoiceItem.create(row_data.to_hash)
-      x.update(unit_price: x.unit_price.to_f/100)
+    invoice_items.each do |row|
+      x = InvoiceItem.create!({
+        id: row[:id],
+        item_id: row[:item_id],
+        invoice_id: row[:invoice_id],
+        unit_price: row[:unit_price].to_f/100,
+        quantity: row[:quantity],
+        created_at: row[:created_at],
+        updated_at: row[:updated_at],
+      })
     end
   end
 
-  task transaction_csv: :environment do
+  task transactions: :environment do
     Transaction.destroy_all
     transactions = CSV.foreach("./data/transactions.csv", headers: true, header_converters: :symbol)
-    transactions.each do |row_data|
-      Transaction.create(row_data.to_hash)
+    transactions.each do |row|
+      x = Transaction.create({
+        id: row[:id],
+        invoice_id: row[:invoice_id],
+        credit_card_number: row[:credit_card_number],
+        credit_card_expiration_date: row[:credit_card_expiration_date],
+        result: row[:result],
+        created_at: row[:created_at],
+        updated_at: row[:updated_at]
+      })
     end
   end
 
