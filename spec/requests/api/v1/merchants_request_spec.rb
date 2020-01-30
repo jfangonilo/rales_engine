@@ -57,4 +57,55 @@ describe "Merchants API" do
       expect(invoice["attributes"]["merchant_id"]).to eq merchant.id
     end
   end
+
+  it "can find a merchant by id" do
+    merchant = create(:merchant)
+
+    get "/api/v1/merchants/find?id=#{merchant.id}"
+    expect(response).to be_successful
+    parsed_merchant = JSON.parse(response.body)
+    expect(parsed_merchant["data"]["attributes"]["name"]).to eq merchant.name
+  end
+
+  it "can find a merchant by name" do
+    merchant = create(:merchant)
+
+    get "/api/v1/merchants/find?name=#{merchant.name}"
+    expect(response).to be_successful
+    parsed_merchant = JSON.parse(response.body)
+    expect(parsed_merchant["data"]["attributes"]["name"]).to eq merchant.name
+  end
+
+  it "can find a merchant by created_at date" do
+    merchant = create(:merchant, created_at: Time.now.to_s)
+
+    get "/api/v1/merchants/find?created_at=#{merchant.created_at}"
+    expect(response).to be_successful
+    parsed_merchant = JSON.parse(response.body)
+    expect(parsed_merchant["data"]["attributes"]["name"]).to eq merchant.name
+  end
+
+  it "can find a merchant by updated_at date" do
+    merchant = create(:merchant, updated_at: Time.now.to_s)
+
+    get "/api/v1/merchants/find?updated_at=#{merchant.updated_at}"
+    expect(response).to be_successful
+    parsed_merchant = JSON.parse(response.body)
+    expect(parsed_merchant["data"]["attributes"]["name"]).to eq merchant.name
+  end
+
+  # it "can return a merchant by most revenue" do
+  #   merchant = create(:merchant)
+  #   customer = create(:customer)
+
+  #   item = create(:item, merchant: merchant, unit_price: 1)
+  #   invoice = create(:invoice, customer: customer, merchant: merchant)
+  #   invoice_item = create(:invoice_item, item: item, unit_price: item.unit_price, invoice: invoice)
+  #   transaction = create(:transaction, invoice: invoice)
+
+  #   get "/api/v1/merchants/most_revenue?quantity=1"
+  #   expect(response).to be_successful
+  #   parsed_merchant = JSON.parse(response.body)
+  #   expect(parsed_merchant["data"]["attributes"]["name"]).to eq merchant.name
+  # end
 end
