@@ -9,7 +9,7 @@ class Merchant < ApplicationRecord
         sum(invoice_items.quantity * invoice_items.unit_price) as revenue
       ')
       .group(:id)
-      .where(transactions: {result: 'success'})
+      .merge(Transaction.successful)
       .order('revenue desc')
       .limit(limit)
   end
@@ -21,9 +21,9 @@ class Merchant < ApplicationRecord
         sum(invoice_items.quantity * invoice_items.unit_price) as total_revenue
       ')
       .group('date')
-      .where(transactions: {result: 'success', created_at: date})
+      .merge(Transaction.successful)
+      .where(invoices: {created_at: date})
       .order('total_revenue desc')
       .first
-      .total_revenue
   end
 end
