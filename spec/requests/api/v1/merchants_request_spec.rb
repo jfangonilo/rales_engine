@@ -94,7 +94,7 @@ describe "Merchants API" do
     expect(parsed_merchant["data"]["attributes"]["id"]).to eq merchant.id
   end
 
-  it "can return a merchant by most revenue" do
+  it "can return merchants by most revenue" do
     merchant = create(:merchant)
     customer = create(:customer)
 
@@ -105,7 +105,23 @@ describe "Merchants API" do
 
     get "/api/v1/merchants/most_revenue?quantity=1"
     expect(response).to be_successful
-    parsed_merchant = JSON.parse(response.body)
-    expect(parsed_merchant["data"][0]["attributes"]["id"]).to eq merchant.id
+    parsed_merchants = JSON.parse(response.body)
+    expect(parsed_merchants["data"][0]["attributes"]["id"]).to eq merchant.id
+  end
+
+  it "can get revenue for merchants by date" do
+    merchant = create(:merchant)
+    customer = create(:customer)
+
+    date = "2012-01-01"
+    item = create(:item, merchant: merchant, unit_price: 100)
+    invoice = create(:invoice, customer: customer, merchant: merchant, created_at: date)
+    invoice_item = create(:invoice_item, item: item, unit_price: item.unit_price, invoice: invoice)
+    transaction = create(:transaction, invoice: invoice)
+
+    get "/api/v1/merchants/revenue?date=#{date}"
+    expect(response).to be_successful
+    result = JSON.parse(response.body)
+    expect(result["data"]["attributes"]["total_revenue"]).to eq 100
   end
 end
