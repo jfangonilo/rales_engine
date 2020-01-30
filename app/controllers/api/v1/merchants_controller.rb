@@ -2,6 +2,8 @@ class Api::V1::MerchantsController < ApplicationController
   def index
     if params[:quantity]
       render json: MerchantSerializer.new(Merchant.most_revenue(params[:quantity]))
+    elsif params[:date]
+      render json: RevenueSerializer.new(Merchant.total_revenue(params[:date]))
     else
       render json: MerchantSerializer.new(Merchant.all)
     end
