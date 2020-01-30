@@ -35,18 +35,25 @@ RSpec.describe Merchant, type: :model do
       @invoice_item_5 = create(:invoice_item, item: @item_5, unit_price: @item_5.unit_price, invoice: @invoice_5)
       @invoice_item_6 = create(:invoice_item, item: @item_6, unit_price: @item_6.unit_price, invoice: @invoice_6)
 
-      @transaction_0 = create(:transaction, invoice: @invoice_0)
-      @transaction_1 = create(:transaction, invoice: @invoice_1)
-      @transaction_2 = create(:transaction, invoice: @invoice_2)
-      @transaction_3 = create(:transaction, invoice: @invoice_3)
+      @date = "2020-01-01"
+      @transaction_0 = create(:transaction, invoice: @invoice_0, created_at: @date)
+      @transaction_1 = create(:transaction, invoice: @invoice_1, created_at: @date)
+      @transaction_2 = create(:transaction, invoice: @invoice_2, created_at: @date)
+      @transaction_3 = create(:transaction, invoice: @invoice_3, created_at: @date)
       @transaction_4 = create(:transaction, invoice: @invoice_4)
-      @transaction_5 = create(:transaction, invoice: @invoice_5, result: "failed")
-      @transaction_6 = create(:transaction, invoice: @invoice_6, result: "failed")
+      @transaction_5 = create(:transaction, invoice: @invoice_5, created_at: @date, result: "failed")
+      @transaction_6 = create(:transaction, invoice: @invoice_6, created_at: @date, result: "failed")
     end
 
     it 'most_revenue' do
       expected = [@merchants[4], @merchants[3], @merchants[2]]
       expect(Merchant.most_revenue(3)).to eq expected
+    end
+
+    it 'total_revenue_by_date' do
+      result = Merchant.total_revenue(@date)
+      expected = 1111
+      expect(result).to eq expected
     end
   end
 end
