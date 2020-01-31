@@ -2,6 +2,11 @@ class Merchant < ApplicationRecord
   has_many :items
   has_many :invoices
 
+  scope :with_id, ->(id) { where(id: id) }
+  scope :with_name, ->(name) { where(name: name) }
+  scope :with_created_date, ->(date) { where(created_at: date) }
+  scope :with_updated_date, ->(date) { where(updated_at: date) }
+
   def self.most_revenue(limit)
     Merchant.joins(invoices: [:invoice_items, :transactions])
       .select('
