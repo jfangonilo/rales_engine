@@ -22,4 +22,33 @@ describe "Items API" do
     item = JSON.parse(response.body)
     expect(item["data"]["attributes"]["name"]).to eq db_item.name
   end
+
+  it "find an item by id" do
+    merchant = create(:merchant)
+
+    item = create(:item, merchant: merchant)
+    item_2 = create(:item, merchant: merchant)
+
+
+    get "/api/v1/items/find?id=#{item.id}"
+
+    expect(response).to be_successful
+    parsed_item = JSON.parse(response.body)["data"]
+    expect(parsed_item["attributes"]["id"]).to eq item.id
+    expect(parsed_item["attributes"]["name"]).to eq item.name
+  end
+
+  it "find an item by name" do
+    merchant = create(:merchant)
+
+    item = create(:item, merchant: merchant)
+    item_2 = create(:item, merchant: merchant)
+
+    get "/api/v1/items/find?name=#{item.name}"
+
+    expect(response).to be_successful
+    parsed_item = JSON.parse(response.body)["data"]
+    expect(parsed_item["attributes"]["id"]).to eq item.id
+    expect(parsed_item["attributes"]["name"]).to eq item.name
+  end
 end
