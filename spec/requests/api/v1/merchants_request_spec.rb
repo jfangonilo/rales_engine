@@ -175,6 +175,6 @@ describe "Merchants API" do
     get "/api/v1/merchants/revenue?date=#{date}"
     expect(response).to be_successful
     result = JSON.parse(response.body)
-    expect(result["data"]["attributes"]["total_revenue"]).to eq 100
+    expect(result["data"]["attributes"]["total_revenue"]).to eq "100.0"
   end
 end
