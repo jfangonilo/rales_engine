@@ -3,4 +3,5 @@ class Item < ApplicationRecord
   belongs_to :merchant
 
   scope :from_merchant, ->(merchant_id) { where(merchant_id: merchant_id) }
+  scope :with_id, ->(id) { where(id: id) }
 end
