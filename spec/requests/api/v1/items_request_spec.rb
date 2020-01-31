@@ -29,7 +29,6 @@ describe "Items API" do
     item = create(:item, merchant: merchant)
     item_2 = create(:item, merchant: merchant)
 
-
     get "/api/v1/items/find?id=#{item.id}"
 
     expect(response).to be_successful
@@ -118,5 +117,18 @@ describe "Items API" do
     parsed_item = JSON.parse(response.body)["data"]
     expect(parsed_item["attributes"]["id"]).to eq item.id
     expect(parsed_item["attributes"]["name"]).to eq item.name
+  end
+
+  it "finds all items with an id" do
+    merchant = create(:merchant)
+
+    item = create(:item, merchant: merchant)
+    item_2 = create(:item, merchant: merchant)
+
+    get "/api/v1/items/find_all?id=#{item.id}"
+    expect(response).to be_successful
+    parsed_items = JSON.parse(response.body)["data"]
+    expect(parsed_items.first["attributes"]["id"]).to eq item.id
+    expect(parsed_items.first["attributes"]["name"]).to eq item.name
   end
 end
