@@ -20,8 +20,6 @@ class Merchant < ApplicationRecord
   end
 
   def self.total_revenue(date)
-    start = Time.zone.parse(date)
-    stop = start + 1.day
     Merchant.joins(invoices: [:invoice_items, :transactions])
       .select("
         date_trunc('day', invoices.created_at) as date,
@@ -29,7 +27,7 @@ class Merchant < ApplicationRecord
       ")
       .group('date')
       .merge(Transaction.successful)
-      .where("invoices.created_at between '#{start}' and '#{stop}'")
+      .merge(Invoice.created_on(date))
       .order('total_revenue desc')
       .first
   end
