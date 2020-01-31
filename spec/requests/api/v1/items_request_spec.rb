@@ -51,4 +51,72 @@ describe "Items API" do
     expect(parsed_item["attributes"]["id"]).to eq item.id
     expect(parsed_item["attributes"]["name"]).to eq item.name
   end
+
+  it "finds an item by description" do
+    merchant = create(:merchant)
+
+    item = create(:item, merchant: merchant)
+    item_2 = create(:item, merchant: merchant)
+
+    get "/api/v1/items/find?description=#{item.description}"
+    expect(response).to be_successful
+    parsed_item = JSON.parse(response.body)["data"]
+    expect(parsed_item["attributes"]["id"]).to eq item.id
+    expect(parsed_item["attributes"]["name"]).to eq item.name
+  end
+
+  it "finds an item by merchant_id" do
+    merchant = create(:merchant)
+    merchant_2 = create(:merchant)
+
+    item = create(:item, merchant: merchant)
+    item_2 = create(:item, merchant: merchant_2)
+
+    get "/api/v1/items/find?merchant_id=#{item.merchant_id}"
+    expect(response).to be_successful
+    parsed_item = JSON.parse(response.body)["data"]
+    expect(parsed_item["attributes"]["id"]).to eq item.id
+    expect(parsed_item["attributes"]["name"]).to eq item.name
+  end
+
+  it "finds an item by unit_price" do
+    merchant = create(:merchant)
+
+    item = create(:item, merchant: merchant)
+    item_2 = create(:item, unit_price: 2, merchant: merchant)
+
+    get "/api/v1/items/find?unit_price=#{item_2.unit_price}"
+    expect(response).to be_successful
+    parsed_item = JSON.parse(response.body)["data"]
+    expect(parsed_item["attributes"]["id"]).to eq item_2.id
+    expect(parsed_item["attributes"]["name"]).to eq item_2.name
+  end
+
+  it "finds an item by created_at" do
+    date = "2012-01-01"
+    merchant = create(:merchant)
+
+    item = create(:item, merchant: merchant, created_at: date)
+    item_2 = create(:item, merchant: merchant)
+
+    get "/api/v1/items/find?created_at=#{date}"
+    expect(response).to be_successful
+    parsed_item = JSON.parse(response.body)["data"]
+    expect(parsed_item["attributes"]["id"]).to eq item.id
+    expect(parsed_item["attributes"]["name"]).to eq item.name
+  end
+
+  it "finds an item by updated_at" do
+    date = "2012-01-01"
+    merchant = create(:merchant)
+
+    item = create(:item, merchant: merchant, updated_at: date)
+    item_2 = create(:item, merchant: merchant)
+
+    get "/api/v1/items/find?updated_at=#{date}"
+    expect(response).to be_successful
+    parsed_item = JSON.parse(response.body)["data"]
+    expect(parsed_item["attributes"]["id"]).to eq item.id
+    expect(parsed_item["attributes"]["name"]).to eq item.name
+  end
 end
