@@ -6,9 +6,5 @@ class Invoice < ApplicationRecord
   belongs_to :merchant
 
   scope :from_merchant, ->(merchant_id) { where(merchant_id: merchant_id) }
-  scope :created_on, ->(date) {
-    where("invoices.created_at between
-      '#{Time.parse(date)}' and '#{Time.parse(date) + 1.day}'"
-    )
-  }
+  scope :created_on, ->(date) { where(created_at: date) }
 end
