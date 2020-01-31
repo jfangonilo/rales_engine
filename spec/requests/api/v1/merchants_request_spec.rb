@@ -94,6 +94,59 @@ describe "Merchants API" do
     expect(parsed_merchant["data"]["attributes"]["id"]).to eq merchant.id
   end
 
+  it "can find all merchants with a given id" do
+    merchant = create(:merchant)
+    merchant_2 = create(:merchant)
+
+    get "/api/v1/merchants/find_all?id=#{merchant.id}"
+    expect(response).to be_successful
+    parsed_merchants = JSON.parse(response.body)
+    expect(parsed_merchants["data"].count).to eq 1
+    expect(parsed_merchants["data"][0]["attributes"]["id"]).to eq merchant.id
+  end
+
+  it "can find all merchants with a certain name" do
+    merchant = create(:merchant)
+    merchant_2 = create(:merchant)
+    merchant_3 = create(:merchant, name: "other name")
+
+    expect(merchant.name).to eq merchant_2.name
+    get "/api/v1/merchants/find_all?name=#{merchant.name}"
+    expect(response).to be_successful
+    parsed_merchants = JSON.parse(response.body)
+    expect(parsed_merchants["data"].count).to eq 2
+    expect(parsed_merchants["data"][0]["attributes"]["name"]).to eq merchant.name
+    expect(parsed_merchants["data"][1]["attributes"]["name"]).to eq merchant_2.name
+  end
+
+  it "can find all merchants created on a certain date" do
+    date = "2012-01-01"
+    merchant = create(:merchant, created_at: date)
+    merchant_2 = create(:merchant, created_at: date)
+    merchant_3 = create(:merchant, created_at: "2020-01-01")
+
+    get "/api/v1/merchants/find_all?created_at=#{date}"
+    expect(response).to be_successful
+    parsed_merchants = JSON.parse(response.body)
+    expect(parsed_merchants["data"].count).to eq 2
+    expect(parsed_merchants["data"][0]["attributes"]["name"]).to eq merchant.name
+    expect(parsed_merchants["data"][1]["attributes"]["name"]).to eq merchant_2.name
+  end
+
+  it "can find all merchants updated on a certain date" do
+    date = "2012-01-01"
+    merchant = create(:merchant, updated_at: date)
+    merchant_2 = create(:merchant, updated_at: date)
+    merchant_3 = create(:merchant, updated_at: "2020-01-01")
+
+    get "/api/v1/merchants/find_all?updated_at=#{date}"
+    expect(response).to be_successful
+    parsed_merchants = JSON.parse(response.body)
+    expect(parsed_merchants["data"].count).to eq 2
+    expect(parsed_merchants["data"][0]["attributes"]["name"]).to eq merchant.name
+    expect(parsed_merchants["data"][1]["attributes"]["name"]).to eq merchant_2.name
+  end
+
   it "can return merchants by most revenue" do
     merchant = create(:merchant)
     customer = create(:customer)
