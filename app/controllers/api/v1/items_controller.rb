@@ -2,6 +2,8 @@ class Api::V1::ItemsController < ApplicationController
   def index
     if params[:id]
       render json: ItemSerializer.new(Item.with_id(params[:id]))
+    elsif params[:name]
+      render json: ItemSerializer.new(Item.with_name(params[:name]))
     elsif params[:merchant_id]
       render json: ItemSerializer.new(Item.from_merchant(params[:merchant_id]))
     else
