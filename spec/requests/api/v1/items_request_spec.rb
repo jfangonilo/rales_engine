@@ -253,4 +253,32 @@ describe "Items API" do
     expect(parsed_items.last["attributes"]["id"]).to eq item_2.id
     expect(parsed_items.last["attributes"]["name"]).to eq item_2.name
   end
+
+  it "finds all associated invoice_items" do
+    merchant = create(:merchant)
+    customer = create(:customer)
+
+    item = create(:item, merchant: merchant)
+    item_2 = create(:item, merchant: merchant)
+    invoice = create(:invoice, merchant: merchant, customer: customer)
+    invoice_item = create(:invoice_item, item: item, invoice: invoice)
+    invoice_item_2 = create(:invoice_item, item: item, invoice: invoice)
+    invoice_item_3 = create(:invoice_item, item: item, invoice: invoice)
+    invoice_item_4 = create(:invoice_item, item: item_2, invoice: invoice)
+
+    get "/api/v1/items/#{item.id}/invoice_items"
+    expect(response).to be_successful
+    parsed_invoice_items = JSON.parse(response.body)["data"]
+    expect(parsed_invoice_items.count).to eq 3
+  end
+
+  it "finds the associated merchant" do
+    merchant = create(:merchant)
+
+    item = create(:item, merchant: merchant)
+    get "/api/v1/items/#{item.id}/merchant"
+    expect(response).to be_successful
+    parsed_merchant = JSON.parse(response.body)["data"]
+    expect(parsed_merchant["attributes"]["id"]).to eq merchant.id
+  end
 end

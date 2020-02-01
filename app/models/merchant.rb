@@ -27,6 +27,8 @@ class Merchant < ApplicationRecord
       find_by(created_at: params[:created_at])
     elsif params[:updated_at]
       find_by(updated_at: params[:updated_at])
+    elsif params[:item_id]
+      joins(:items).where("items.id = ?", params[:item_id]).first
     end
   end
 
