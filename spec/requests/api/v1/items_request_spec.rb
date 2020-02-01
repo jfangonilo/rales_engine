@@ -206,7 +206,7 @@ describe "Items API" do
 
     item = create(:item, merchant: merchant)
     item_2 = create(:item, merchant: merchant)
-    item_3 = create(:item, merchant: merchant, merchant: merchant_2)
+    item_3 = create(:item, merchant: merchant_2)
 
     get "/api/v1/items/find_all?merchant_id=#{item.merchant_id}"
     expect(response).to be_successful
@@ -218,7 +218,7 @@ describe "Items API" do
     expect(parsed_items.last["attributes"]["name"]).to eq item_2.name
   end
 
-  it "finds all items with merchant" do
+  it "finds all items with created_at" do
     merchant = create(:merchant)
 
     date = "2012-01-01"
@@ -236,7 +236,7 @@ describe "Items API" do
     expect(parsed_items.last["attributes"]["name"]).to eq item_2.name
   end
 
-  it "finds all items with merchant" do
+  it "finds all items with updated_at" do
     merchant = create(:merchant)
 
     date = "2012-01-01"
