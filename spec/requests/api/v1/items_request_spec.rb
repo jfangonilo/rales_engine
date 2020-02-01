@@ -131,4 +131,38 @@ describe "Items API" do
     expect(parsed_items.first["attributes"]["id"]).to eq item.id
     expect(parsed_items.first["attributes"]["name"]).to eq item.name
   end
+
+  it "finds all items with name" do
+    merchant = create(:merchant)
+
+    item = create(:item, merchant: merchant)
+    item_2 = create(:item, merchant: merchant)
+    item_3 = create(:item, merchant: merchant, name: "not the same")
+
+    get "/api/v1/items/find_all?name=#{item.name}"
+    expect(response).to be_successful
+    parsed_items = JSON.parse(response.body)["data"]
+    expect(parsed_items.count).to eq 2
+    expect(parsed_items.first["attributes"]["id"]).to eq item.id
+    expect(parsed_items.first["attributes"]["name"]).to eq item.name
+    expect(parsed_items.last["attributes"]["id"]).to eq item_2.id
+    expect(parsed_items.last["attributes"]["name"]).to eq item_2.name
+  end
+
+  it "finds all items with name" do
+    merchant = create(:merchant)
+
+    item = create(:item, merchant: merchant)
+    item_2 = create(:item, merchant: merchant)
+    item_3 = create(:item, merchant: merchant, name: "not the same")
+
+    get "/api/v1/items/find_all?name=#{item.name}"
+    expect(response).to be_successful
+    parsed_items = JSON.parse(response.body)["data"]
+    expect(parsed_items.count).to eq 2
+    expect(parsed_items.first["attributes"]["id"]).to eq item.id
+    expect(parsed_items.first["attributes"]["name"]).to eq item.name
+    expect(parsed_items.last["attributes"]["id"]).to eq item_2.id
+    expect(parsed_items.last["attributes"]["name"]).to eq item_2.name
+  end
 end
