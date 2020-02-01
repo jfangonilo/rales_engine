@@ -279,7 +279,6 @@ describe "Items API" do
     get "/api/v1/items/#{item.id}/merchant"
     expect(response).to be_successful
     parsed_merchant = JSON.parse(response.body)["data"]
-    binding.pry
     expect(parsed_merchant["attributes"]["id"]).to eq merchant.id
   end
 end
