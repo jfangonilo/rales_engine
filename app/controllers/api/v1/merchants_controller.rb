@@ -8,10 +8,6 @@ class Api::V1::MerchantsController < ApplicationController
       render json: MerchantSerializer.new(Merchant.created_on(params[:created_at]))
     elsif params[:updated_at]
       render json: MerchantSerializer.new(Merchant.updated_on(params[:updated_at]))
-    elsif params[:quantity]
-      render json: MerchantSerializer.new(Merchant.most_revenue(params[:quantity]))
-    elsif params[:date]
-      render json: RevenueSerializer.new(Merchant.total_revenue(params[:date]))
     else
       render json: MerchantSerializer.new(Merchant.all)
     end
