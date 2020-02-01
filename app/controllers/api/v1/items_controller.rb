@@ -4,6 +4,14 @@ class Api::V1::ItemsController < ApplicationController
       render json: ItemSerializer.new(Item.with_id(params[:id]))
     elsif params[:name]
       render json: ItemSerializer.new(Item.with_name(params[:name]))
+    elsif params[:description]
+      render json: ItemSerializer.new(Item.with_description(params[:description]))
+    elsif params[:unit_price]
+      render json: ItemSerializer.new(Item.with_unit_price(params[:unit_price]))
+    elsif params[:created_at]
+      render json: ItemSerializer.new(Item.created_on(params[:created_at]))
+    elsif params[:updated_at]
+      render json: ItemSerializer.new(Item.updated_on(params[:updated_at]))
     elsif params[:merchant_id]
       render json: ItemSerializer.new(Item.from_merchant(params[:merchant_id]))
     else
