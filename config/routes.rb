@@ -14,6 +14,7 @@ Rails.application.routes.draw do
       end
 
       get "/customers/find", to: "customers#show"
+      get "/customers/find_all", to: "customers#index"
       resources :customers, only: [:index, :show]
 
       get "/items/find", to: "items#show"
