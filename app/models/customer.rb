@@ -44,15 +44,15 @@ class Customer < ApplicationRecord
 
   def self.favorite_by_merchant(merchant_id)
     joins(invoices: [:transactions]).
-      select("
-        customers.*,
-          count(transactions.id) as total_successful_transactions
-      ").
-      group(:id).
-      merge(Transaction.successful).
-      where(invoices: {merchant_id: merchant_id}).
-      order('total_successful_transactions desc').
-      limit(1).
-      first
+    select("
+      customers.*,
+      count(transactions.id) as total_successful_transactions
+    ").
+    group(:id).
+    merge(Transaction.successful).
+    where(invoices: {merchant_id: merchant_id}).
+    order('total_successful_transactions desc').
+    limit(1).
+    first
   end
 end
