@@ -56,4 +56,28 @@ describe "Customers API" do
     expect(parsed_customer["attributes"]["last_name"]).to eq customer.last_name
   end
 
+  it "can get a single customer by created_at" do
+    date = "2012-01-01"
+    customer = create(:customer, created_at: date)
+
+    get "/api/v1/customers/find?created_at=#{date}"
+    expect(response).to be_successful
+    parsed_customer = JSON.parse(response.body)["data"]
+    expect(parsed_customer["attributes"]["id"]).to eq customer.id
+    expect(parsed_customer["attributes"]["first_name"]).to eq customer.first_name
+    expect(parsed_customer["attributes"]["last_name"]).to eq customer.last_name
+  end
+
+  it "can get a single customer by updated_at" do
+    date = "2012-01-01"
+    customer = create(:customer, updated_at: date)
+
+    get "/api/v1/customers/find?updated_at=#{date}"
+    expect(response).to be_successful
+    parsed_customer = JSON.parse(response.body)["data"]
+    expect(parsed_customer["attributes"]["id"]).to eq customer.id
+    expect(parsed_customer["attributes"]["first_name"]).to eq customer.first_name
+    expect(parsed_customer["attributes"]["last_name"]).to eq customer.last_name
+  end
+
 end
