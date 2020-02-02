@@ -13,6 +13,7 @@ Rails.application.routes.draw do
         resources :invoices, only: [:index]
       end
 
+      get "/customers/find", to: "customers#show"
       resources :customers, only: [:index, :show]
 
       get "/items/find", to: "items#show"
