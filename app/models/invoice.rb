@@ -7,4 +7,5 @@ class Invoice < ApplicationRecord
 
   scope :from_merchant, ->(merchant_id) { where(merchant_id: merchant_id) }
   scope :from_customer, ->(customer_id) { where(customer_id: customer_id) }
+  scope :with_status, ->(status) { where(status: status) }
 end
