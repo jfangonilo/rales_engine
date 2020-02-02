@@ -1,9 +1,11 @@
 class Api::V1::InvoicesController < ApplicationController
   def index
-    if params[:merchant_id]
-      render json: InvoiceSerializer.new(Invoice.from_merchant(params[:merchant_id]))
-    elsif params[:customer_id]
-      render json: InvoiceSerializer.new(Invoice.from_customer(params[:customer_id]))
-    end
+    invoices = Invoice.search_all(params)
+    render json: InvoiceSerializer.new(invoices)
+  end
+
+  def show
+    invoice = Invoice.search(params)
+    render json: InvoiceSerializer.new(invoice)
   end
 end
