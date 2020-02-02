@@ -51,7 +51,7 @@ RSpec.describe Merchant, type: :model do
     end
 
     it 'total_revenue_by_date' do
-      result = Merchant.total_revenue(@date)
+      result = Merchant.total_revenue_by_date(@date)
       expected = 1111
       expect(result.total_revenue).to eq expected
     end
