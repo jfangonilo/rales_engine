@@ -188,4 +188,93 @@ describe "Invoices API" do
     expect(parsed_invoices.first["attributes"]["id"]).to eq invoice.id
     expect(parsed_invoices.last["attributes"]["id"]).to eq invoice_3.id
   end
+
+  it "can return all associated transactions" do
+    customer = create(:customer)
+    merchant = create(:merchant)
+    invoice = create(:invoice, customer: customer, merchant: merchant)
+    invoice_2 = create(:invoice, customer: customer, merchant: merchant)
+
+    transaction = create(:transaction, invoice: invoice)
+    transaction_2 = create(:transaction, invoice: invoice)
+    transaction_3 = create(:transaction, invoice: invoice)
+    transaction_4 = create(:transaction, invoice: invoice_2)
+
+    get "/api/v1/invoices/#{invoice.id}/transactions"
+    expect(response).to be_successful
+    parsed_invoices = JSON.parse(response.body)["data"]
+    expect(parsed_invoices.count).to eq 3
+  end
+
+  it "can return all associated invoice_items" do
+    customer = create(:customer)
+    merchant = create(:merchant)
+
+    item = create(:item, merchant: merchant)
+    item_2 = create(:item, merchant: merchant)
+    item_3 = create(:item, merchant: merchant)
+    item_4 = create(:item, merchant: merchant)
+
+    invoice = create(:invoice, customer: customer, merchant: merchant)
+    invoice_item_1 = create(:invoice_item, invoice: invoice, item: item)
+    invoice_item_2 = create(:invoice_item, invoice: invoice, item: item_2)
+    invoice_item_3 = create(:invoice_item, invoice: invoice, item: item_3)
+
+    invoice_2 = create(:invoice, customer: customer, merchant: merchant)
+    invoice_item_4 = create(:invoice_item, invoice: invoice_2, item: item_4)
+
+    get "/api/v1/invoices/#{invoice.id}/invoice_items"
+    expect(response).to be_successful
+    parsed_invoices = JSON.parse(response.body)["data"]
+    expect(parsed_invoices.count).to eq 3
+  end
+
+  it "can return all associated items" do
+    customer = create(:customer)
+    merchant = create(:merchant)
+
+    item = create(:item, merchant: merchant)
+    item_2 = create(:item, merchant: merchant)
+    item_3 = create(:item, merchant: merchant)
+    item_4 = create(:item, merchant: merchant)
+
+    invoice = create(:invoice, customer: customer, merchant: merchant)
+    invoice_item_1 = create(:invoice_item, invoice: invoice, item: item)
+    invoice_item_2 = create(:invoice_item, invoice: invoice, item: item_2)
+    invoice_item_3 = create(:invoice_item, invoice: invoice, item: item_3)
+
+    invoice_2 = create(:invoice, customer: customer, merchant: merchant)
+    invoice_item_4 = create(:invoice_item, invoice: invoice_2, item: item_4)
+
+    get "/api/v1/invoices/#{invoice.id}/items"
+    expect(response).to be_successful
+    parsed_items = JSON.parse(response.body)["data"]
+    expect(parsed_items.count).to eq 3
+  end
+
+  it "can return the associated customer" do
+    customer = create(:customer)
+    customer_2 = create(:customer)
+    merchant = create(:merchant)
+
+    invoice = create(:invoice, customer: customer, merchant: merchant)
+
+    get "/api/v1/invoices/#{invoice.id}/customer"
+    expect(response).to be_successful
+    parsed_customer = JSON.parse(response.body)["data"]
+    expect(parsed_customer["attributes"]["id"]).to eq customer.id
+  end
+
+  it "can return the associated merchant" do
+    customer = create(:customer)
+    merchant = create(:merchant)
+    merchant_2 = create(:merchant)
+
+    invoice = create(:invoice, customer: customer, merchant: merchant)
+
+    get "/api/v1/invoices/#{invoice.id}/merchant"
+    expect(response).to be_successful
+    parsed_merchant = JSON.parse(response.body)["data"]
+    expect(parsed_merchant["attributes"]["id"]).to eq merchant.id
+  end
 end
