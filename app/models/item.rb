@@ -50,4 +50,15 @@ class Item < ApplicationRecord
       find_by(updated_at: params[:updated_at])
     end
   end
+
+  def self.most_revenue(limit)
+    joins(invoice_items: [invoice: [:transactions]]).
+    select("items.*,
+      sum(invoice_items.quantity * invoice_items.unit_price) as revenue
+    ").
+    group(:id).
+    merge(Transaction.successful).
+    order('revenue desc').
+    limit(limit)
+  end
 end
