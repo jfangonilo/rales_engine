@@ -1,6 +1,14 @@
 class Api::V1::InvoicesController < ApplicationController
   def index
-    if params[:merchant_id]
+    if params[:id]
+      render json: InvoiceSerializer.new(Invoice.with_id(params[:id]))
+    elsif params[:status]
+      render json: InvoiceSerializer.new(Invoice.with_status(params[:status]))
+    elsif params[:created_at]
+      render json: InvoiceSerializer.new(Invoice.created_on(params[:created_at]))
+    elsif params[:updated_at]
+      render json: InvoiceSerializer.new(Invoice.updated_on(params[:updated_at]))
+    elsif params[:merchant_id]
       render json: InvoiceSerializer.new(Invoice.from_merchant(params[:merchant_id]))
     elsif params[:customer_id]
       render json: InvoiceSerializer.new(Invoice.from_customer(params[:customer_id]))
