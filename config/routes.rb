@@ -28,6 +28,7 @@ Rails.application.routes.draw do
       end
 
       get "invoices/find", to: "invoices#show"
+      get "invoices/find_all", to: "invoices#index"
       resources :invoices, only: [:index, :show]
     end
   end
