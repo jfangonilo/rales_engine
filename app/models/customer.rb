@@ -4,6 +4,11 @@ class Customer < ApplicationRecord
 
   scope :with_first_name, ->(first_name) { where(first_name: first_name) }
   scope :with_last_name, ->(last_name) { where(last_name: last_name) }
+  scope :from_invoice, ->(invoice_id) {
+    joins(:invoices).
+    where("invoices.id = ?", invoice_id).
+    first
+  }
 
   def self.search_all(params)
     if params[:id]
@@ -32,6 +37,8 @@ class Customer < ApplicationRecord
       find_by(created_at: params[:created_at])
     elsif params[:updated_at]
       find_by(updated_at: params[:updated_at])
+    elsif params[:invoice_id]
+      from_invoice(params[:invoice_id])
     end
   end
 end

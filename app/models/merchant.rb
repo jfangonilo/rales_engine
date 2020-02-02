@@ -8,6 +8,11 @@ class Merchant < ApplicationRecord
     where("items.id = ?", item_id).
     first
   }
+  scope :from_invoice, ->(invoice_id) {
+    joins(:invoices).
+    where("invoices.id = ?", invoice_id).
+    first
+  }
 
   def self.search_all(params)
     if params[:id]
@@ -34,6 +39,8 @@ class Merchant < ApplicationRecord
       find_by(updated_at: params[:updated_at])
     elsif params[:item_id]
       from_item(params[:item_id])
+    elsif params[:invoice_id]
+      from_invoice(params[:invoice_id])
     end
   end
 
