@@ -3,10 +3,10 @@ class Item < ApplicationRecord
   belongs_to :merchant
 
   scope :with_name, ->(name) { where(name: name) }
-  scope :from_merchant, ->(merchant_id) { where(merchant_id: merchant_id) }
   scope :with_description, ->(description) { where(description: description) }
   scope :with_unit_price, ->(unit_price) { where(unit_price: unit_price) }
-  scope :attached_to_invoice, ->(invoice_id) {
+  scope :from_merchant, ->(merchant_id) { where(merchant_id: merchant_id) }
+  scope :from_invoice, ->(invoice_id) {
     joins(invoice_items: [:invoice]).
     where("invoices.id = ?", invoice_id)
   }
@@ -27,7 +27,7 @@ class Item < ApplicationRecord
     elsif params[:merchant_id]
       from_merchant(params[:merchant_id])
     elsif params[:invoice_id]
-      attached_to_invoice(params[:invoice_id])
+      from_invoice(params[:invoice_id])
     else
       all
     end
