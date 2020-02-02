@@ -251,4 +251,30 @@ describe "Invoices API" do
     parsed_items = JSON.parse(response.body)["data"]
     expect(parsed_items.count).to eq 3
   end
+
+  it "can return the associated customer" do
+    customer = create(:customer)
+    customer_2 = create(:customer)
+    merchant = create(:merchant)
+
+    invoice = create(:invoice, customer: customer, merchant: merchant)
+
+    get "/api/v1/invoices/#{invoice.id}/customer"
+    expect(response).to be_successful
+    parsed_customer = JSON.parse(response.body)["data"]
+    expect(parsed_customer["attributes"]["id"]).to eq customer.id
+  end
+
+  it "can return the associated merchant" do
+    customer = create(:customer)
+    merchant = create(:merchant)
+    merchant_2 = create(:merchant)
+
+    invoice = create(:invoice, customer: customer, merchant: merchant)
+
+    get "/api/v1/invoices/#{invoice.id}/merchant"
+    expect(response).to be_successful
+    parsed_merchant = JSON.parse(response.body)["data"]
+    expect(parsed_merchant["attributes"]["id"]).to eq merchant.id
+  end
 end
