@@ -5,6 +5,8 @@ class Invoice < ApplicationRecord
   belongs_to :customer
   belongs_to :merchant
 
+  scope :with_status, ->(status) { where(status: status) }
+
   scope :from_merchant, ->(merchant_id) { where(merchant_id: merchant_id) }
   scope :from_customer, ->(customer_id) { where(customer_id: customer_id) }
   scope :from_invoice_item, ->(invoice_item_id) {
@@ -17,7 +19,6 @@ class Invoice < ApplicationRecord
     where("transactions.id = ?", transaction_id).
     first
   }
-  scope :with_status, ->(status) { where(status: status) }
 
   def self.search_all(params)
     if params[:id]

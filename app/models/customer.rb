@@ -4,6 +4,7 @@ class Customer < ApplicationRecord
 
   scope :with_first_name, ->(first_name) { where(first_name: first_name) }
   scope :with_last_name, ->(last_name) { where(last_name: last_name) }
+
   scope :from_invoice, ->(invoice_id) {
     joins(:invoices).
     where("invoices.id = ?", invoice_id).
