@@ -3,8 +3,7 @@ class InvoiceItemSerializer
   attributes :id,
     :item_id,
     :invoice_id,
-    :quantity,
-    :unit_price
+    :quantity
 
     attributes :unit_price do |invoice_item|
       invoice_item.unit_price.to_s
