@@ -4,7 +4,16 @@ class Api::V1::TransactionsController < ApplicationController
       transactions = Transaction.from_customer(params[:customer_id])
     elsif params[:invoice_id]
       transactions = Transaction.from_invoice(params[:invoice_id])
+    else
+      transactions = Transaction.all
     end
     render json: TransactionSerializer.new(transactions)
+  end
+
+  def show
+    if params[:id]
+      transaction = Transaction.find(params[:id])
+    end
+    render json: TransactionSerializer.new(transaction)
   end
 end
