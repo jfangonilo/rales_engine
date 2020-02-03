@@ -49,18 +49,6 @@ describe "Transactions API" do
     expect(result["attributes"]["id"]).to eq transaction.id
   end
 
-  it "can find a single transaction by invoice_id" do
-    customer = create(:customer)
-    merchant = create(:merchant)
-    invoice = create(:invoice, customer: customer, merchant: merchant)
-    transaction = create(:transaction, invoice: invoice)
-
-    get "/api/v1/transactions/find?invoice_id=#{transaction.invoice_id}"
-    expect(response).to be_successful
-    result = JSON.parse(response.body)["data"]
-    expect(result["attributes"]["id"]).to eq transaction.id
-  end
-
   it "can find a single transaction by credit_card_number" do
     customer = create(:customer)
     merchant = create(:merchant)
@@ -183,5 +171,17 @@ describe "Transactions API" do
     expect(response).to be_successful
     result = JSON.parse(response.body)["data"]
     expect(result.first["attributes"]["id"]).to eq transaction.id
+  end
+
+  it "can return the associated invoice" do
+    customer = create(:customer)
+    merchant = create(:merchant)
+    invoice = create(:invoice, customer: customer, merchant: merchant)
+    transaction = create(:transaction, invoice: invoice)
+
+    get "/api/v1/transactions/#{transaction.id}/invoice"
+    expect(response).to be_successful
+    result = JSON.parse(response.body)["data"]
+    expect(result["attributes"]["id"]).to eq invoice.id
   end
 end
