@@ -28,6 +28,8 @@ class Item < ApplicationRecord
       from_merchant(params[:merchant_id])
     elsif params[:invoice_id]
       from_invoice(params[:invoice_id])
+    elsif params[:quantity]
+      most_revenue(params[:quantity])
     else
       all
     end
