@@ -10,6 +10,11 @@ class Item < ApplicationRecord
     joins(invoice_items: [:invoice]).
     where("invoices.id = ?", invoice_id)
   }
+  scope :from_invoice_item, ->(invoice_item_id) {
+    joins(:invoice_items).
+    where("invoice_items.id = ?", invoice_item_id).
+    first
+  }
 
   def self.search_all(params)
     if params[:id]
@@ -50,6 +55,8 @@ class Item < ApplicationRecord
       find_by(created_at: params[:created_at])
     elsif params[:updated_at]
       find_by(updated_at: params[:updated_at])
+    elsif params[:invoice_item_id]
+      from_invoice_item(params[:invoice_item_id])
     end
   end
 
