@@ -7,6 +7,11 @@ class Invoice < ApplicationRecord
 
   scope :from_merchant, ->(merchant_id) { where(merchant_id: merchant_id) }
   scope :from_customer, ->(customer_id) { where(customer_id: customer_id) }
+  scope :from_invoice_item, ->(invoice_item_id) {
+    joins(:invoice_items).
+    where("invoice_items.id = ?", invoice_item_id).
+    first
+  }
   scope :with_status, ->(status) { where(status: status) }
 
   def self.search_all(params)
@@ -40,6 +45,8 @@ class Invoice < ApplicationRecord
       find_by(created_at: params[:created_at])
     elsif params[:updated_at]
       find_by(updated_at: params[:updated_at])
+    elsif params[:invoice_item_id]
+      from_invoice_item(params[:invoice_item_id])
     end
   end
 end
