@@ -281,4 +281,15 @@ describe "Items API" do
     parsed_merchant = JSON.parse(response.body)["data"]
     expect(parsed_merchant["attributes"]["id"]).to eq merchant.id
   end
+
+  it "finds top items by revenue generated" do
+    merchant = create(:merchant)
+    customer = create(:customer)
+
+    item = create(:item, merchant: merchant)
+    invoice = create(:invoice, merchant: merchant, customer: customer)
+    invoice_item = create(:invoice_item, item: item, invoice: invoice)
+    get "/api/v1/items/most_revenue?quantity=1"
+    expect(response).to be_successful
+  end
 end

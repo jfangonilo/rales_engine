@@ -28,6 +28,8 @@ class Item < ApplicationRecord
       from_merchant(params[:merchant_id])
     elsif params[:invoice_id]
       from_invoice(params[:invoice_id])
+    elsif params[:quantity]
+      most_revenue(params[:quantity])
     else
       all
     end
@@ -49,5 +51,16 @@ class Item < ApplicationRecord
     elsif params[:updated_at]
       find_by(updated_at: params[:updated_at])
     end
+  end
+
+  def self.most_revenue(limit)
+    joins(invoice_items: [invoice: [:transactions]]).
+    select("items.*,
+      sum(invoice_items.quantity * invoice_items.unit_price) as revenue
+    ").
+    group(:id).
+    merge(Transaction.successful).
+    order('revenue desc').
+    limit(limit)
   end
 end

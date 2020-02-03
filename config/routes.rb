@@ -22,6 +22,8 @@ Rails.application.routes.draw do
         get "/favorite_merchant", to: "favorite_merchant#show"
       end
 
+      get "/items/most_revenue", to: "items#index"
+
       get "/items/find", to: "items#show"
       get "/items/find_all", to: "items#index"
       resources :items, only: [:index, :show] do
