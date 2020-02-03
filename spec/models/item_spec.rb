@@ -38,7 +38,6 @@ RSpec.describe Item, type: :model do
     it 'most revenue' do
       expected = [@item_1, @item_0]
       result = Item.most_revenue(2)
-      binding.pry
       expect(result).to eq expected
     end
   end
