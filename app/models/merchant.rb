@@ -3,6 +3,7 @@ class Merchant < ApplicationRecord
   has_many :invoices
 
   scope :with_name, ->(name) { where(name: name) }
+
   scope :from_item, ->(item_id) {
     joins(:items).
     where("items.id = ?", item_id).
