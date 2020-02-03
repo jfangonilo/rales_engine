@@ -12,6 +12,11 @@ class Invoice < ApplicationRecord
     where("invoice_items.id = ?", invoice_item_id).
     first
   }
+  scope :from_transaction, ->(transaction_id) {
+    joins(:transactions).
+    where("transactions.id = ?", transaction_id).
+    first
+  }
   scope :with_status, ->(status) { where(status: status) }
 
   def self.search_all(params)
@@ -47,6 +52,8 @@ class Invoice < ApplicationRecord
       find_by(updated_at: params[:updated_at])
     elsif params[:invoice_item_id]
       from_invoice_item(params[:invoice_item_id])
+    elsif params[:transaction_id]
+      from_transaction(params[:transaction_id])
     end
   end
 end
