@@ -1,10 +1,11 @@
 class Api::V1::InvoiceItemsController < ApplicationController
   def index
-    if params[:item_id]
-      invoice_items = InvoiceItem.from_item(params[:item_id])
-    elsif params[:invoice_id]
-      invoice_items = InvoiceItem.from_invoice(params[:invoice_id])
-    end
+    invoice_items = InvoiceItem.search_all(params)
     render json: InvoiceItemSerializer.new(invoice_items)
+  end
+
+  def show
+    invoice_item = InvoiceItem.search(params)
+    render json: InvoiceItemSerializer.new(invoice_item)
   end
 end
