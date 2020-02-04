@@ -7,17 +7,26 @@ class Invoice < ApplicationRecord
 
   scope :with_status, ->(status) { where(status: status) }
 
-  scope :from_merchant, ->(merchant_id) { where(merchant_id: merchant_id).order(:id) }
-  scope :from_customer, ->(customer_id) { where(customer_id: customer_id).order(:id) }
-  scope :from_invoice_item, ->(invoice_item_id) {
-    joins(:invoice_items).
-    where("invoice_items.id = ?", invoice_item_id).
-    first
+  scope :from_merchant, ->(merchant_id) {
+    where(merchant_id: merchant_id)
+      .order(:id)
   }
+
+  scope :from_customer, ->(customer_id) {
+    where(customer_id: customer_id)
+      .order(:id)
+  }
+
+  scope :from_invoice_item, ->(invoice_item_id) {
+    joins(:invoice_items)
+      .where('invoice_items.id = ?', invoice_item_id)
+      .first
+  }
+
   scope :from_transaction, ->(transaction_id) {
-    joins(:transactions).
-    where("transactions.id = ?", transaction_id).
-    first
+    joins(:transactions)
+      .where('transactions.id = ?', transaction_id)
+      .first
   }
 
   def self.search_all(params)

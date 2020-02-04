@@ -6,9 +6,9 @@ class Customer < ApplicationRecord
   scope :with_last_name, ->(last_name) { where(last_name: last_name) }
 
   scope :from_invoice, ->(invoice_id) {
-    joins(:invoices).
-    where("invoices.id = ?", invoice_id).
-    first
+    joins(:invoices)
+      .where('invoices.id = ?', invoice_id)
+      .first
   }
 
   def self.search_all(params)
@@ -44,16 +44,16 @@ class Customer < ApplicationRecord
   end
 
   def self.favorite_by_merchant(merchant_id)
-    joins(invoices: [:transactions]).
-    select("
-      customers.*,
-      count(transactions.id) as total_successful_transactions
-    ").
-    group(:id).
-    merge(Transaction.successful).
-    where(invoices: {merchant_id: merchant_id}).
-    order('total_successful_transactions desc').
-    limit(1).
-    first
+    joins(invoices: [:transactions])
+      .select("
+        customers.*,
+        count(transactions.id) as total_successful_transactions
+      ")
+      .group(:id)
+      .merge(Transaction.successful)
+      .where(invoices: { merchant_id: merchant_id })
+      .order('total_successful_transactions desc')
+      .limit(1)
+      .first
   end
 end

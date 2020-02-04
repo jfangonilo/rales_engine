@@ -1,14 +1,20 @@
 class Transaction < ApplicationRecord
   belongs_to :invoice
 
-  scope :successful, -> { where(result: "success") }
-  scope :with_credit_card_number, ->(number) { where(credit_card_number: number)}
-  scope :with_result, ->(result) { where(result: result)}
+  scope :successful, -> { where(result: 'success') }
+  scope :with_result, ->(result) { where(result: result) }
+  scope :with_credit_card_number, ->(number) {
+    where(credit_card_number: number)
+  }
 
-  scope :from_invoice, ->(invoice_id) { where(invoice_id: invoice_id).order(:id) }
+  scope :from_invoice, ->(invoice_id) {
+    where(invoice_id: invoice_id)
+      .order(:id)
+  }
+
   scope :from_customer, ->(customer_id) {
-    joins(:invoice).
-    where("invoices.customer_id = ?", customer_id)
+    joins(:invoice)
+      .where('invoices.customer_id = ?', customer_id)
   }
 
   def self.search_all(params)
