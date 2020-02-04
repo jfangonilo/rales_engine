@@ -5,7 +5,7 @@ class InvoiceItem < ApplicationRecord
   scope :with_quantity, ->(quantity) { where(quantity: quantity) }
   scope :with_unit_price, ->(unit_price) { where(unit_price: unit_price) }
 
-  scope :from_item, ->(item_id) { where(item_id: item_id) }
+  scope :from_item, ->(item_id) { where(item_id: item_id).order(:id) }
   scope :from_invoice, ->(invoice_id) { where(invoice_id: invoice_id).order(:id) }
 
   def self.search_all(params)
