@@ -41,7 +41,7 @@ namespace :import do
     Item.destroy_all
     items = CSV.foreach("./data/items.csv", headers: true, header_converters: :symbol)
     items.each do |row|
-      x = Item.create!({
+      Item.create!({
         id: row[:id],
         name: row[:name],
         description: row[:description],
@@ -72,7 +72,7 @@ namespace :import do
     InvoiceItem.destroy_all
     invoice_items = CSV.foreach("./data/invoice_items.csv", headers: true, header_converters: :symbol)
     invoice_items.each do |row|
-      x = InvoiceItem.create!({
+      InvoiceItem.create!({
         id: row[:id],
         item_id: row[:item_id],
         invoice_id: row[:invoice_id],
@@ -88,7 +88,7 @@ namespace :import do
     Transaction.destroy_all
     transactions = CSV.foreach("./data/transactions.csv", headers: true, header_converters: :symbol)
     transactions.each do |row|
-      x = Transaction.create({
+      Transaction.create!({
         id: row[:id],
         invoice_id: row[:invoice_id],
         credit_card_number: row[:credit_card_number],

@@ -7,15 +7,20 @@ class Item < ApplicationRecord
   scope :with_description, ->(description) { where(description: description) }
   scope :with_unit_price, ->(unit_price) { where(unit_price: unit_price) }
 
-  scope :from_merchant, ->(merchant_id) { where(merchant_id: merchant_id) }
-  scope :from_invoice, ->(invoice_id) {
-    joins(:invoices).
-    where("invoices.id = ?", invoice_id)
+  scope :from_merchant, ->(merchant_id) {
+    where(merchant_id: merchant_id)
+      .order(:id)
   }
+
+  scope :from_invoice, ->(invoice_id) {
+    joins(:invoices)
+      .where('invoices.id = ?', invoice_id)
+  }
+
   scope :from_invoice_item, ->(invoice_item_id) {
-    joins(:invoice_items).
-    where("invoice_items.id = ?", invoice_item_id).
-    first
+    joins(:invoice_items)
+      .where('invoice_items.id = ?', invoice_item_id)
+      .first
   }
 
   def self.search_all(params)
@@ -63,13 +68,13 @@ class Item < ApplicationRecord
   end
 
   def self.most_revenue(limit)
-    joins(invoice_items: [invoice: [:transactions]]).
-    select("items.*,
-      sum(invoice_items.quantity * invoice_items.unit_price) as revenue
-    ").
-    group(:id).
-    merge(Transaction.successful).
-    order('revenue desc').
-    limit(limit)
+    joins(invoice_items: [invoice: [:transactions]])
+      .select("items.*,
+        sum(invoice_items.quantity * invoice_items.unit_price) as revenue
+      ")
+      .group(:id)
+      .merge(Transaction.successful)
+      .order('revenue desc')
+      .limit(limit)
   end
 end
