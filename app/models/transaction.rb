@@ -5,7 +5,7 @@ class Transaction < ApplicationRecord
   scope :with_credit_card_number, ->(number) { where(credit_card_number: number)}
   scope :with_result, ->(result) { where(result: result)}
 
-  scope :from_invoice, ->(invoice_id) { where(invoice_id: invoice_id) }
+  scope :from_invoice, ->(invoice_id) { where(invoice_id: invoice_id).order(:id) }
   scope :from_customer, ->(customer_id) {
     joins(:invoice).
     where("invoices.customer_id = ?", customer_id)

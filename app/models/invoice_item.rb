@@ -8,7 +8,8 @@ class InvoiceItem < ApplicationRecord
   scope :from_item, ->(item_id) { where(item_id: item_id) }
   scope :from_invoice, ->(invoice_id) {
     joins(:invoice).
-    where("invoices.id = ?", invoice_id)
+    where("invoices.id = ?", invoice_id).
+    order(:id)
   }
 
   def self.search_all(params)

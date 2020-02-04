@@ -7,7 +7,7 @@ class Item < ApplicationRecord
   scope :with_description, ->(description) { where(description: description) }
   scope :with_unit_price, ->(unit_price) { where(unit_price: unit_price) }
 
-  scope :from_merchant, ->(merchant_id) { where(merchant_id: merchant_id) }
+  scope :from_merchant, ->(merchant_id) { where(merchant_id: merchant_id).order(:id) }
   scope :from_invoice, ->(invoice_id) {
     joins(:invoices).
     where("invoices.id = ?", invoice_id)
